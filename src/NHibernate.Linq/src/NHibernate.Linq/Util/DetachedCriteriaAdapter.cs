@@ -20,6 +20,7 @@ namespace NHibernate.Linq.Util
 	{
 		private readonly DetachedCriteria detachedCriteria;
 		private readonly ISession session;
+		private bool? isReadOnly;
 
 		public DetachedCriteriaAdapter(DetachedCriteria detachedCriteria, ISession session)
 		{
@@ -46,6 +47,7 @@ namespace NHibernate.Linq.Util
 				return null;
 			}
 		}
+
 		public ICriteria Add(ICriterion expression)
 		{
 			return detachedCriteria.Add(expression).Adapt(session);
@@ -66,6 +68,11 @@ namespace NHibernate.Linq.Util
 			throw new NotSupportedException();
 		}
 
+		public ICriteria CreateAlias(string associationPath, string alias, JoinType joinType, ICriterion withClause)
+		{
+			return detachedCriteria.CreateAlias(associationPath, alias, joinType).Adapt(session);
+		}
+
 		public ICriteria CreateAlias(string associationPath, string alias, JoinType joinType)
 		{
 			return detachedCriteria.CreateAlias(associationPath, alias, joinType).Adapt(session);
@@ -74,6 +81,11 @@ namespace NHibernate.Linq.Util
 		public ICriteria CreateAlias(string associationPath, string alias)
 		{
 			return detachedCriteria.CreateAlias(associationPath, alias).Adapt(session);
+		}
+
+		public ICriteria CreateCriteria(string associationPath, string alias, JoinType joinType, ICriterion withClause)
+		{
+			return detachedCriteria.CreateCriteria(associationPath, alias, joinType).Adapt(session);
 		}
 
 		public ICriteria CreateCriteria(string associationPath, string alias, JoinType joinType)
@@ -228,6 +240,37 @@ namespace NHibernate.Linq.Util
 		public IFutureValue<T> FutureValue<T>()
 		{
 			throw new NotSupportedException();
+		}
+
+		public ICriteria SetReadOnly(bool readOnly)
+		{
+			isReadOnly = readOnly;
+			return this;
+		}
+
+		public bool IsReadOnlyInitialized
+		{
+			get { return isReadOnly.HasValue; }
+		}
+		
+		public bool IsReadOnly
+		{
+			get
+			{
+				if (!this.IsReadOnlyInitialized && this.Session == null)
+				{
+					throw new InvalidOperationException("cannot determine readOnly/modifiable setting when it is not initialized and is not initialized and Session == null");
+				}
+				
+				if (!this.IsReadOnlyInitialized)
+				{
+					return this.Session.DefaultReadOnly;
+				}
+				else
+				{
+					return this.isReadOnly.Value;
+				}
+			}
 		}
 
 		#endregion

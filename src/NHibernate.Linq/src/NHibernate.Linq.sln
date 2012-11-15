@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Linq", "NHibernate.Linq\NHibernate.Linq.csproj", "{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Linq.Tests", "NHibernate.Linq.Tests\NHibernate.Linq.Tests.csproj", "{B09778CE-44FD-4BE2-AB1E-9AFDFACB8279}"
